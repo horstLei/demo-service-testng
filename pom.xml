@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>at.it4health.demo</groupId>
+    <artifactId>demo-testng-suite</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+
+        <!-- Runtime -->
+        <jboss.home>${env.JBOSS_HOME}</jboss.home>
+        <wildfly.bom.version>18.0.1.Final</wildfly.bom.version>
+        <wildfly.directory.path>${project.build.directory}/wildfly-${wildfly.bom.version}</wildfly.directory.path>
+
+        <wildfly-arquillian.version>4.0.1.Final</wildfly-arquillian.version>
+
+        <!-- JavaEE/JakartaEE 8 -->
+        <jakartaee.version>8.0.0</jakartaee.version>
+
+        <arquillian.version>1.9.5.Final</arquillian.version>
+        <arquillian-suite-extension.version>1.2.2</arquillian-suite-extension.version>
+        <shrinkwrap.version>1.2.6</shrinkwrap.version>
+        <shrinkwrap.resolvers.version>3.3.4</shrinkwrap.resolvers.version>
+        <testng.version>7.11.0</testng.version>
+
+        <!-- plugins Version -->
+        <maven.plugin.war.version>3.4.0</maven.plugin.war.version>
+        <maven.plugin.ear.version>3.3.0</maven.plugin.ear.version>
+        <maven.plugin.compiler.version>3.14.0</maven.plugin.compiler.version>
+        <plugin.maven.dependency.version>3.8.1</plugin.maven.dependency.version>
+
+        <maven.plugin.surefire.version>3.5.3</maven.plugin.surefire.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- JakartaEE -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakartaee.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- junit5 test -->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- suite extension -->
+            <dependency>
+                <groupId>org.eu.ingwar.tools</groupId>
+                <artifactId>arquillian-suite-extension</artifactId>
+                <version>${arquillian-suite-extension.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- arquillian / shrinkwrap -->
+
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!-- see prev
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-bom</artifactId>
+                <version>${wildfly-arquillian.version}</version> 4.0.1.Final
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            -->
+
+            <!-- Arquillian Core + TestNG integration -->
+            <!-- https://mvnrepository.com/artifact/org.jboss.arquillian.testng/arquillian-testng-container -->
+            <dependency>
+                <groupId>org.jboss.arquillian.testng</groupId>
+                <artifactId>arquillian-testng-container</artifactId>
+                <version>${arquillian.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Arquillian Container Adapter (example: WildFly Embedded) -->
+
+
+            <!-- ShrinkWrap for deployment packaging -->
+            <dependency>
+                <groupId>org.jboss.shrinkwrap</groupId>
+                <artifactId>shrinkwrap-bom</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-bom</artifactId>
+                <version>${shrinkwrap.resolvers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <!-- Logging (optional) -->
+            <!--<dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>2.0.12</version>
+                <scope>test</scope>
+            </dependency>-->
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.36</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.slf4j</groupId>
+                <artifactId>slf4j-jboss-logmanager</artifactId>
+                <version>1.2.0.Final</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.logmanager</groupId>
+                <artifactId>jboss-logmanager</artifactId>
+                <version>2.1.14.Final</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>demo-assembly</module>
+        <module>demo-service</module>
+        <module>demo-service-api</module>
+        <module>demo-test-ejb</module>
+        <module>demo-test-rest</module>
+        <module>demo-web/war</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.plugin.compiler.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.plugin.war.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ear-plugin</artifactId>
+                    <version>${maven.plugin.ear.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${plugin.maven.dependency.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${plugin.maven.surefire.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>3.0.2.Final</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="DemoService Suite">
+    <test name="Fail On First">
+        <groups>
+            <run>
+                <include name="failOnSecond"/>
+            </run>
+        </groups>
+        <classes>
+
+            <class name="at.it4health.test.servicea.DemoServiceATest">
+                <parameter name="abc" value="abc"/>
+            </class>
+            <class name="at.it4health.test.serviceb.DemoServiceBTest"/>
+        </classes>
+    </test>
+</suite>

@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>at.it4health.demo</groupId>
+        <artifactId>demo-testng-suite</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>at.it4health.test</groupId>
+    <artifactId>demo-testng-suite-rest-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>demo-REST-test</name>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <!-- java ee -->
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <!--<version>2.0.2</version>-->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <!--<version>2.1.6</version>-->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <!--<version>4.0.3</version>-->
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- runtime dependencies -->
+        <dependency>
+            <groupId>at.it4health.module</groupId>
+            <artifactId>demo-service-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>at.it4health.module</groupId>
+            <artifactId>demo-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+
+
+
+        <!-- testng dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- suite extension -->
+        <dependency>
+            <groupId>org.eu.ingwar.tools</groupId>
+            <artifactId>arquillian-suite-extension</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.arquillian.testng</groupId>
+                    <artifactId>arquillian-testng-container</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- arquillian -->
+        <dependency>
+            <groupId>org.jboss.arquillian.testng</groupId>
+            <artifactId>arquillian-testng-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.testng</groupId>
+            <artifactId>arquillian-testng-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet</artifactId>
+            <version>${arquillian.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- shrinkwrap -->
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-impl-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-spi</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-spi-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.slf4j</groupId>
+            <artifactId>slf4j-jboss-logmanager</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <profiles>
+        <!-- jboss embedded arquillian -->
+        <profile>
+            <id>arq-jboss-embedded</id>
+
+        </profile>
+
+        <!-- jboss managed arquillian -->
+        <profile>
+            <id>arq-jboss-managed</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <skipTests>false</skipTests>
+                <jbossHome>${wildfly.directory.path}</jbossHome>
+                <arquillian.profile>jboss-managed</arquillian.profile>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>${wildfly-arquillian.version}</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- artifact resolver -->
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-api</artifactId>
+                    <version>${shrinkwrap.resolvers.version}</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-spi</artifactId>
+                    <version>${shrinkwrap.resolvers.version}</version>
+                    <scope>test</scope>
+                </dependency><!-- -->
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+                    <version>${shrinkwrap.resolvers.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-spi-maven</artifactId>
+                    <version>${shrinkwrap.resolvers.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+                    <version>${shrinkwrap.resolvers.version}</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                    <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+                    <version>${shrinkwrap.resolvers.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources/</directory>
+                        <includes>
+                            <include>**/*.xml</include>
+                            <!--<include>**/*-dataprovider.json</include> -->
+                            <include>**/*.properties</include>
+                            <include>**/*.sql</include>
+                        </includes>
+                    </testResource>
+                </testResources>
+                <plugins>
+                    <!-- download and unzip the latest public dist of EAP -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${wildfly.bom.version}</version>
+                                            <overWrite>false</overWrite>
+                                            <type>zip</type>
+                                            <outputDirectory>target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <!--
+                            <execution>
+                                <id>deploy-jdbc-driver</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>DB_DRIVER_</groupId>
+                                            <artifactId>DB_DRIVER_</artifactId>
+                                            <version>${dependency.db.driver.version}</version>
+                                            <outputDirectory>${jbossHome}/standalone/deployments</outputDirectory>
+                                            <destFileName>dbdriver-jdbc.jar</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>-->
+                        </executions>
+                    </plugin>
+                    <!-- surefire -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+
+                        <configuration>
+                            <argLine>-Xmx1024m -XX:MaxPermSize=256m
+                                -Duser.timezone=UTC
+                                -Dfile.encoding=UTF-8
+                            </argLine>
+                            <forkCount>0</forkCount>
+                            <!--
+                            <excludedGroups>${test.surefire.excludeGroups}</excludedGroups>
+                            <skipTests>${skipTests}</skipTests>-->
+
+                            <useModulePath>false</useModulePath>
+                        </configuration>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.testng</groupId>
+                                <artifactId>testng</artifactId>
+                                <!--<version>${testng.version}</version>-->
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <!-- surefire -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <reportsDirectory>target/surefire-reports/</reportsDirectory>
+                            <forkCount>1</forkCount>
+                            <reuseForks>true</reuseForks>
+                            <!-- -XX:MaxPermSize=256m  -->
+                            <argLine>-Xmx4096m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -Djava.util.logging.manager=org.jboss.logmanager.LogManager</argLine>
+                            <environmentVariables>
+                                <JBOSS_HOME>${jbossHome}</JBOSS_HOME>
+                            </environmentVariables>
+                            <systemPropertyVariables>
+                                <!-- -Darquillian.debug=true -->
+                                <arquillian.debug>true</arquillian.debug>
+                                <arquillian.launch>${arquillian.profile}</arquillian.launch>
+                                <serverConfig>standalone.xml</serverConfig>
+                            </systemPropertyVariables>
+                            <!--<skip>false</skip>-->
+                            <skipTests>${skipTests}</skipTests>
+
+                            <test>at.it4health.test.servicea.DemoServiceATest</test>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.jboss.arquillian.testng</groupId>
+                                <artifactId>arquillian-testng-container</artifactId>
+                                <version>${arquillian.version}</version>
+                            </dependency>
+                        </dependencies>
+
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- jboss remote arquillian -->
+        <profile>
+            <id>arq-jboss-remote</id>
+            <properties>
+                <arquillian.profile>jboss-remote</arquillian.profile>
+            </properties>
+            <dependencies>
+                <!-- TODO correct to correct versions
+                <dependency>
+                    <groupId>org.jboss.spec</groupId>
+                    <artifactId>jboss-jakartaee-8.0</artifactId>
+                    <type>pom</type>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-arquillian-container-remote</artifactId>
+                    <scope>test</scope>
+                </dependency>-->
+            </dependencies>
+        </profile>
+
+        <!-- prepare standalone via cli -->
+        <profile>
+            <id>prep-wildfly-standalone_cli</id>
+            <build>
+                <plugins>
+                    <!--<plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <! - - prepare db driver - - >
+                            <execution>
+                                <id>db-driver</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/module-dependencies</outputDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.microsoft.sqlserver</groupId>
+                                            <artifactId>mssql-jdbc</artifactId>
+                                            <version>${dependency.ms.sql.driver.version}</version>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>-->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <configuration>
+                            <jbossHome>${wildfly.directory.path}</jbossHome>
+                            <commands>
+                                <!--
+                                   <?xml version="1.0" encoding="UTF-8"?>
+                                   <module xmlns="urn:jboss:module:1.1" name="com.microsoft.sqlserver.jdbc">
+                                       <resources>
+                                           <resource-root path="sqljdbc42.jar" />
+                                       </resources>
+                                       <dependencies>
+                                           <module name="javax.api" />
+                                           <module name="javax.transaction.api" />
+                                       </dependencies>
+                                   </module>
+                                   -->
+                                <command>module add --name=com.microsoft.sqlserver.jdbc --dependencies=javax.api,javax.transaction.api --resources=${project.build.directory}/module-dependencies/mssql-jdbc-${dependency.ms.sql.driver.version}.jar</command>
+
+                                <!--<drivers>
+                                       <driver name="com.sqlserver" module="com.microsoft.sqlserver.jdbc">
+                                           <xa-datasource-class>com.microsoft.sqlserver.jdbc.SQLServerXADataSource</xa-datasource-class>
+                                       </driver>
+                                       <driver name="com.mysql" module="com.mysql"/>
+                                   </drivers>-->
+                            </commands>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-jboss</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <configuration>
+                                    <javaOpts>-Djboss.bind.address=127.0.0.1</javaOpts>
+                                    <startupTimeout>120</startupTimeout>
+                                    <stdout>none</stdout>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>execute-cli</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>execute-commands</goal>
+                                </goals>
+                                <configuration>
+                                    <fork>true</fork>
+
+                                    <!-- when true, shutdown will not be executed when failed -->
+                                    <failOnError>false</failOnError>
+                                    <scripts>
+                                        <script>${project.basedir}/src/test/resources/jboss-cli/jboss-cli.cli</script>
+                                    </scripts>
+
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-jboss</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

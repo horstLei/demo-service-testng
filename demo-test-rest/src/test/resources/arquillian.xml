@@ -1,0 +1,41 @@
+<arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    <!-- set default protocol to servlet instead of jmx -->
+    <defaultProtocol type="Servlet 3.0"/>
+
+    <!-- export deployment artifacts to inspect -->
+    <engine>
+        <property name="deploymentExportPath">target/</property>
+    </engine>
+    <container qualifier="jboss-managed" default="true">
+        <configuration>
+            <property name="jbossHome">/System/Volumes/Data/data/private_projects/demo-tests/demo-service-testng/demo-test-rest/target/wildfly-18.0.1.Final</property>
+            <property name="javaVmArguments">-Xmx4096m -XX:MaxPermSize=256m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -Dlogging.configuration=file:%JBOSS_CONFIG_DIR%/logging.properties -Djava.util.logging.manager=org.jboss.logmanager.LogManager</property>
+            <!--
+                            <property name="jbossHome">${JBOSS_HOME}</property>
+
+                            <property name="javaVmArguments">-Djboss.socket.binding.port-offset=20000</property>
+                            <property name="managementPort">29999</property>
+                            <property name="managementAddress">127.0.0.1</property>
+                        -->
+            <property name="allowConnectingToRunningServer">true</property>
+        </configuration>
+    </container>
+    <!--
+        <container qualifier="jboss-managed" default="true">
+            <configuration>
+                <property name="jbossHome">${JBOSS_HOME}</property>
+                <property name="javaVmArguments">-Djboss.socket.binding.port-offset=20000</property>
+                <property name="managementPort">29999</property>
+                <property name="managementAddress">127.0.0.1</property>
+                <property name="allowConnectingToRunningServer">true</property>
+            </configuration>
+        </container>
+    -->
+    <container qualifier="jboss-remote">
+        <configuration>
+            <property name="managementPort">19999</property>
+            <!--<property name="javaVmArguments">-Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n</property>-->
+        </configuration>
+    </container>
+</arquillian>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="moduleMapping">
+      <map>
+        <entry key="demo-service-api" value="demo-service (1)" />
+        <entry key="demo-test-ejb" value="demo-test" />
+        <entry key="demo-testng-suite" value="demo-junit5-suite" />
+        <entry key="demo-testng-suite-assembly" value="demo-junit5-suite-assembly" />
+        <entry key="demo-testng-suite-ejb-test" value="demo-junit5-suite-ejb-test" />
+        <entry key="demo-testng-suite-rest-test" value="demo-junit5-suite-rest-test" />
+        <entry key="demo-testng-suite-war-assembly" value="demo-junit5-suite-war-assembly" />
+      </map>
+    </option>
+  </component>
+</project>
